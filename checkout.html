@@ -1,0 +1,51 @@
+<html>
+<head>
+<title>Reviiii's checkout</title>
+</head>
+<body>
+<p id="list"></p>
+<script src="prices.js"></script>
+<script>
+var items = {};
+function addItem(item, amount) {
+items[item] = amount
+checkOut()
+return amount+" "+item
+}
+
+function checkOut() {
+var bon = "";
+var price = 0
+var sp = 0;
+var newprice = 0;
+var i;
+for (i in items) {
+sp = getPrice(i, items[i])
+newprice = Math.round(sp*items[i]*100)/100
+bon += "<tr><td>"+items[i]+"x </td><td>"+i+" ("+sp+"/stuk): </td><td>"+newprice+"</td><td>&nbsp;&nbsp;"+Math.floor(items[i]/64)+" stack "+(items[i]%64)+"</td></tr>"
+price = price+newprice
+}
+document.getElementById("list").innerHTML = "<table>"+bon+"<tr><td>Totaal: </td><td></td><td>"+(Math.round(price*100)/100)+"</td><td></td></table>"
+}
+
+function getPrice(item, amount) {
+var p = prices[item]
+var pp = pricePoint[item]
+if (amount > pp) {
+var p2 = 2*p/5
+var p1 = p-p2
+return Math.round((p1+p2*Math.pow(0.75, Math.log2(amount/pp)))*1000)/1000
+} else {
+return p
+}
+}
+
+var kat = location.href.split("?")[1].split("&")
+var vogel = ""
+for (var i=0;i<kat.length;i++) {
+vogel = kat[i].split("=")
+addItem(vogel[0], Number(vogel[1]))
+}
+</script>
+</body>
+</html>
